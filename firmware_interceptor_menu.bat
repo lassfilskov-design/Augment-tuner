@@ -18,23 +18,34 @@ echo  ========================================================
 echo.
 echo  Hvad vil du goere?
 echo.
+echo  SETUP:
 echo  [1] Install Dependencies (Python + mitmproxy)
-echo  [2] Start Firmware Interceptor
-echo  [3] Vis Din Computer IP
-echo  [4] Vis Setup Guide
-echo  [5] Test Installation
+echo  [2] Setup Android Proxy (AUTO via USB)
+echo  [3] Install mitmproxy Certificate (AUTO via USB)
+echo.
+echo  KØRSEL:
+echo  [4] Start Firmware Interceptor
+echo  [5] Vis Din Computer IP
+echo.
+echo  ANDRE:
+echo  [6] Manual Setup Guide
+echo  [7] Test Installation
+echo  [8] Fjern Android Proxy
 echo  [9] Exit
 echo.
 echo  ========================================================
 echo.
 
-set /p choice="Indtast dit valg (1-5 eller 9): "
+set /p choice="Indtast dit valg (1-9): "
 
 if "%choice%"=="1" goto INSTALL
-if "%choice%"=="2" goto START
-if "%choice%"=="3" goto SHOWIP
-if "%choice%"=="4" goto GUIDE
-if "%choice%"=="5" goto TEST
+if "%choice%"=="2" goto SETUP_PROXY
+if "%choice%"=="3" goto SETUP_CERT
+if "%choice%"=="4" goto START
+if "%choice%"=="5" goto SHOWIP
+if "%choice%"=="6" goto GUIDE
+if "%choice%"=="7" goto TEST
+if "%choice%"=="8" goto REMOVE_PROXY
 if "%choice%"=="9" goto EXIT
 
 echo.
@@ -233,6 +244,55 @@ if exist firmware_interceptor.py (
     )
 )
 echo.
+pause
+goto MENU
+
+:SETUP_PROXY
+cls
+echo.
+echo  ========================================================
+echo  AUTOMATISK ANDROID PROXY SETUP
+echo  ========================================================
+echo.
+echo  Dette setup kræver:
+echo   - USB kabel
+echo   - USB Debugging aktiveret på telefonen
+echo.
+echo  Vil du fortsætte? (J/N)
+set /p confirm=
+if /i not "%confirm%"=="J" goto MENU
+
+call setup_android_proxy.bat
+pause
+goto MENU
+
+:SETUP_CERT
+cls
+echo.
+echo  ========================================================
+echo  INSTALLER MITMPROXY CERTIFICATE
+echo  ========================================================
+echo.
+echo  Dette setup kræver:
+echo   - USB kabel
+echo   - USB Debugging aktiveret på telefonen
+echo.
+echo  Vil du fortsætte? (J/N)
+set /p confirm=
+if /i not "%confirm%"=="J" goto MENU
+
+call setup_mitm_cert.bat
+pause
+goto MENU
+
+:REMOVE_PROXY
+cls
+echo.
+echo  ========================================================
+echo  FJERN ANDROID PROXY
+echo  ========================================================
+echo.
+call remove_android_proxy.bat
 pause
 goto MENU
 
