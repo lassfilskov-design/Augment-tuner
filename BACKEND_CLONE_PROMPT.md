@@ -572,12 +572,12 @@ AWS_S3_BUCKET_ASSETS=[bucket_name]
 
 ### AWS Lambda Functions
 ```
-├── graphql-api (main GraphQL resolver)
-├── auth-triggers (Cognito pre/post hooks)
-├── chargebee-webhooks
-├── firmware-processor
-├── device-status-processor
-└── notification-sender
+- graphql-api (main GraphQL resolver)
+- auth-triggers (Cognito pre/post hooks)
+- chargebee-webhooks
+- firmware-processor
+- device-status-processor
+- notification-sender
 ```
 
 ### Database Migrations
