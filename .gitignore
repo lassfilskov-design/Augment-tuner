@@ -32,3 +32,23 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Security Scanner Files
+__pycache__/
+*.py[cod]
+*$py.class
+uploads/
+scan_results/
+firmware_extracted/
+decompiled/
+*.bin
+*.img
+venv/
+env/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+batch_report.json

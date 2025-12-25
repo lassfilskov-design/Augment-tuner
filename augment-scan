@@ -1,0 +1,143 @@
+#!/usr/bin/env python3
+"""
+Augment Scanner CLI - Unified command-line interface
+"""
+
+import sys
+import argparse
+from pathlib import Path
+from scanner import SecurityScanner
+from firmware_tools import FirmwareExtractor, APKDecompiler
+import json
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='Augment Security Scanner - Find backends, passwords, URLs and more',
+        epilog='Examples:\n'
+               '  augment-scan scan app.apk\n'
+               '  augment-scan extract firmware.bin\n'
+               '  augment-scan web\n',
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+
+    subparsers = parser.add_subparsers(dest='command', help='Command to run')
+
+    # Scan command
+    scan_parser = subparsers.add_parser('scan', help='Scan APK or firmware file')
+    scan_parser.add_argument('file', help='File to scan')
+    scan_parser.add_argument('-o', '--output', help='Output directory for results')
+    scan_parser.add_argument('-j', '--json', action='store_true', help='Output as JSON only')
+
+    # Extract command
+    extract_parser = subparsers.add_parser('extract', help='Extract firmware or APK')
+    extract_parser.add_argument('file', help='File to extract')
+    extract_parser.add_argument('-o', '--output', help='Output directory')
+
+    # Decompile command
+    decompile_parser = subparsers.add_parser('decompile', help='Decompile APK file')
+    decompile_parser.add_argument('apk', help='APK file to decompile')
+    decompile_parser.add_argument('-o', '--output', help='Output directory')
+
+    # Batch command
+    batch_parser = subparsers.add_parser('batch', help='Batch scan directory of APKs')
+    batch_parser.add_argument('directory', help='Directory containing APK files')
+    batch_parser.add_argument('-o', '--output', help='Output file', default='batch_report.json')
+
+    # Web command
+    web_parser = subparsers.add_parser('web', help='Start web interface')
+    web_parser.add_argument('-p', '--port', type=int, default=5000, help='Port to run on')
+    web_parser.add_argument('--host', default='0.0.0.0', help='Host to bind to')
+
+    args = parser.parse_args()
+
+    if not args.command:
+        parser.print_help()
+        sys.exit(1)
+
+    # Execute command
+    if args.command == 'scan':
+        cmd_scan(args)
+    elif args.command == 'extract':
+        cmd_extract(args)
+    elif args.command == 'decompile':
+        cmd_decompile(args)
+    elif args.command == 'batch':
+        cmd_batch(args)
+    elif args.command == 'web':
+        cmd_web(args)
+
+def cmd_scan(args):
+    """Scan a file for security issues"""
+    file_path = Path(args.file)
+
+    if not file_path.exists():
+        print(f"Error: File {args.file} not found")
+        sys.exit(1)
+
+    output_dir = args.output or "scan_results"
+    scanner = SecurityScanner(output_dir=output_dir)
+
+    print(f"[*] Scanning {file_path.name}...")
+    report = scanner.scan_apk(str(file_path))
+
+    if args.json:
+        print(json.dumps(report, indent=2))
+    else:
+        print("\n✅ Scan complete! Check output above for details.")
+
+def cmd_extract(args):
+    """Extract firmware or APK"""
+    file_path = Path(args.file)
+
+    if not file_path.exists():
+        print(f"Error: File {args.file} not found")
+        sys.exit(1)
+
+    output_dir = args.output or "firmware_extracted"
+    extractor = FirmwareExtractor(output_dir=output_dir)
+
+    print(f"[*] Extracting {file_path.name}...")
+    results = extractor.extract_firmware(str(file_path))
+
+    print(f"\n[*] File Type: {results['file_type']}")
+    print(f"[*] Size: {results['size']} bytes")
+
+    for method in results['methods']:
+        print(f"\n[*] Method: {method.get('method', method.get('tool'))}")
+        print(f"    Status: {method['status']}")
+        if method['status'] == 'success':
+            print(f"    Output: {method['output']}")
+
+def cmd_decompile(args):
+    """Decompile an APK"""
+    apk_path = Path(args.apk)
+
+    if not apk_path.exists():
+        print(f"Error: APK {args.apk} not found")
+        sys.exit(1)
+
+    output_dir = args.output or "decompiled"
+    decompiler = APKDecompiler(output_dir=output_dir)
+
+    print(f"[*] Decompiling {apk_path.name}...")
+    results = decompiler.decompile_apk(str(apk_path))
+
+    for method in results['methods']:
+        print(f"\n[*] Tool: {method['tool']}")
+        print(f"    Status: {method['status']}")
+        if method['status'] == 'success':
+            print(f"    Output: {method['output']}")
+
+def cmd_batch(args):
+    """Batch scan directory"""
+    from batch_scan import scan_directory
+    scan_directory(args.directory, args.output)
+
+def cmd_web(args):
+    """Start web interface"""
+    from web_app import app
+    print(f"[*] Starting web interface on http://{args.host}:{args.port}")
+    app.run(debug=True, host=args.host, port=args.port)
+
+if __name__ == "__main__":
+    main()
