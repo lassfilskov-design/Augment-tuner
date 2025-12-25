@@ -28,25 +28,27 @@ echo  [4] Start Firmware Interceptor
 echo  [5] Vis Din Computer IP
 echo.
 echo  ANDRE:
-echo  [6] Manual Setup Guide
-echo  [7] Test Installation
-echo  [8] Fjern Android Proxy
-echo  [9] Exit
+echo  [6] Test Android Forbindelse (USB Debug)
+echo  [7] Manual Setup Guide
+echo  [8] Test Installation
+echo  [9] Fjern Android Proxy
+echo  [0] Exit
 echo.
 echo  ========================================================
 echo.
 
-set /p choice="Indtast dit valg (1-9): "
+set /p choice="Indtast dit valg (0-9): "
 
 if "%choice%"=="1" goto INSTALL
 if "%choice%"=="2" goto SETUP_PROXY
 if "%choice%"=="3" goto SETUP_CERT
 if "%choice%"=="4" goto START
 if "%choice%"=="5" goto SHOWIP
-if "%choice%"=="6" goto GUIDE
-if "%choice%"=="7" goto TEST
-if "%choice%"=="8" goto REMOVE_PROXY
-if "%choice%"=="9" goto EXIT
+if "%choice%"=="6" goto DIAGNOSE
+if "%choice%"=="7" goto GUIDE
+if "%choice%"=="8" goto TEST
+if "%choice%"=="9" goto REMOVE_PROXY
+if "%choice%"=="0" goto EXIT
 
 echo.
 echo  [!] Ugyldigt valg! Proev igen...
@@ -244,6 +246,17 @@ if exist firmware_interceptor.py (
     )
 )
 echo.
+pause
+goto MENU
+
+:DIAGNOSE
+cls
+echo.
+echo  ========================================================
+echo  ANDROID FORBINDELSE TEST
+echo  ========================================================
+echo.
+call diagnose_android.bat
 pause
 goto MENU
 
