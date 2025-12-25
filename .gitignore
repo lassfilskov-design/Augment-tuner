@@ -32,3 +32,28 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Scan results and outputs
+scan_results/
+firmware_captures/
+firmware_extracted/
+decompiled/
+uploads/
+*.zip
+augment.zip
+
+# OS
+.DS_Store
+Thumbs.db
