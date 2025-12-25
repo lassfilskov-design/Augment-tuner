@@ -33,24 +33,41 @@ google-services.json
 # Android Profiling
 *.hprof
 
-# Security Scanner Files
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+venv/
+env/
+
+# Security Scanner & Firmware Files
 uploads/
 scan_results/
+firmware_captures/
 firmware_extracted/
 decompiled/
 *.bin
 *.img
-venv/
-env/
+*.zip
+augment.zip
+Augment - Kopi.apk
+batch_report.json
+
+# IDE & Editor
 .vscode/
 *.swp
 *.swo
 *~
+
+# OS
 .DS_Store
 Thumbs.db
-batch_report.json
-augment.zip
-Augment - Kopi.apk
