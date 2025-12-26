@@ -1,0 +1,276 @@
+═══════════════════════════════════════════════════════════════
+  AUGMENT SCOOTER - KOMPLET HEX REFERENCE
+═══════════════════════════════════════════════════════════════
+
+════════════════════════════════════════════════════════════════
+1. BLE GATT SERVICE UUIDs
+════════════════════════════════════════════════════════════════
+
+Primary Services:
+00006680-0000-1000-8000-00805f9b34fb    Hovedkontrol
+00006681-0000-1000-8000-00805f9b34fb    Sekundær kontrol
+00006682-0000-1000-8000-00805f9b34fb    Ekstra kontrol
+00006683-0000-1000-8000-00805f9b34fb    Settings Write ⭐ (VIGTIG)
+00006684-0000-1000-8000-00805f9b34fb    Settings Read ⭐ (VIGTIG)
+00006685-0000-1000-8000-00805f9b34fb    Data sync
+00006687-0000-1000-8000-00805f9b34fb    Ekstra features
+00006688-0000-1000-8000-00805f9b34fb    Status/Telemetry ⭐ (Temperatur)
+
+Standard Services:
+0000180A-0000-1000-8000-00805f9b34fb    Device Information
+0000d101-0000-1000-8000-00805f9b34fb    Custom service 1
+
+Firmware Update Services:
+0000FED7-0000-1000-8000-00805F9B34FB    DFU Service (Firmware Update)
+0000FED8-0000-1000-8000-00805F9B34FB    DFU Control/Transaction
+
+
+════════════════════════════════════════════════════════════════
+2. COMMAND TYPES (Første Byte)
+════════════════════════════════════════════════════════════════
+
+0xA1    Zero Start (kick-less start)
+0xA2    Speed Limit (hastighedsgrænse)
+0xA3    Sport+ Mode (højere acceleration)
+0xA4    Electronic Turbo (max power boost)
+0xB1    Lock Settings (lås indstillinger)
+0xC1    Wheel Configuration (hjul størrelse)
+0xD1    Cruise Control (fartpilot)
+
+
+════════════════════════════════════════════════════════════════
+3. SPEED LIMIT COMMANDS (0xA2)
+════════════════════════════════════════════════════════════════
+
+Format: [0xA2, speed_kmh, 0x00]
+
+Lovlige hastigheder:
+A2 14 00    20 km/h (decimal 20)
+A2 19 00    25 km/h (decimal 25) - Standard i mange lande
+A2 1E 00    30 km/h (decimal 30)
+
+Almindelige hastigheder:
+A2 23 00    35 km/h (decimal 35)
+A2 27 00    39 km/h (decimal 39) - Original max
+A2 28 00    40 km/h (decimal 40)
+A2 2D 00    45 km/h (decimal 45) - Augment M+
+
+Højere hastigheder (FARLIGT):
+A2 32 00    50 km/h (decimal 50)
+A2 37 00    55 km/h (decimal 55)
+A2 3C 00    60 km/h (decimal 60)
+
+Ingen begrænsning:
+A2 FF FF    No limit (max controller kan håndtere)
+
+
+════════════════════════════════════════════════════════════════
+4. ZERO START COMMANDS (0xA1)
+════════════════════════════════════════════════════════════════
+
+Format: [0xA1, enable, max_speed_kmh]
+
+A1 00 00    Zero Start disabled
+A1 01 03    Zero Start enabled, max 3 km/h
+A1 01 04    Zero Start enabled, max 4 km/h
+A1 01 05    Zero Start enabled, max 5 km/h
+A1 01 06    Zero Start enabled, max 6 km/h (anbefalet)
+A1 01 08    Zero Start enabled, max 8 km/h
+A1 01 0A    Zero Start enabled, max 10 km/h
+
+
+════════════════════════════════════════════════════════════════
+5. SPORT+ MODE COMMANDS (0xA3)
+════════════════════════════════════════════════════════════════
+
+Format: [0xA3, enable]
+
+A3 00       Sport+ disabled (normal acceleration)
+A3 01       Sport+ enabled (højere acceleration) 🔥
+
+
+════════════════════════════════════════════════════════════════
+6. ELECTRONIC TURBO COMMANDS (0xA4)
+════════════════════════════════════════════════════════════════
+
+Format: [0xA4, enable]
+
+A4 00       Electronic Turbo disabled
+A4 01       Electronic Turbo enabled (Field Weakening) 🚀
+
+⚠️ ADVARSEL: Turbo genererer MEGET varme! Brug kun på lige strækninger.
+             Temperaturovervågning er OBLIGATORISK!
+
+
+════════════════════════════════════════════════════════════════
+7. LOCK SETTINGS (0xB1)
+════════════════════════════════════════════════════════════════
+
+Format: [0xB1, auto_lock, delay_high, delay_low]
+
+B1 00 00 00    Auto-lock disabled (ingen automatisk lås)
+B1 01 00 1E    Auto-lock enabled, 30 sek delay (decimal 30 = 0x1E)
+B1 01 00 3C    Auto-lock enabled, 60 sek delay (decimal 60 = 0x3C)
+B1 01 00 78    Auto-lock enabled, 120 sek delay (decimal 120 = 0x78)
+B1 01 01 2C    Auto-lock enabled, 300 sek delay (decimal 300 = 0x012C)
+
+
+════════════════════════════════════════════════════════════════
+8. WHEEL SIZE CONFIGURATION (0xC1)
+════════════════════════════════════════════════════════════════
+
+Format: [0xC1, diameter_low, diameter_high]  (Little-endian!)
+
+Almindelige hjul størrelser:
+C1 CB 00    203mm (8.0 tommer) - decimal 203 = 0x00CB
+C1 E3 00    227mm (8.5 tommer) - decimal 227 = 0x00E3
+C1 E7 00    231mm (9.0 tommer) - decimal 231 = 0x00E7
+C1 FE 00    254mm (10.0 tommer) - decimal 254 = 0x00FE ⭐ Standard
+C1 03 01    259mm (10.2 tommer) - decimal 259 = 0x0103
+C1 19 01    281mm (11.0 tommer) - decimal 281 = 0x0119
+C1 33 01    307mm (12.0 tommer) - decimal 307 = 0x0133
+
+Custom størrelser (beregn selv):
+- Decimal → Hex conversion
+- Split i Little-endian (low byte først)
+- Eksempel: 254mm → 0xFE → C1 FE 00
+
+
+════════════════════════════════════════════════════════════════
+9. CRUISE CONTROL (0xD1)
+════════════════════════════════════════════════════════════════
+
+Format: [0xD1, enable, hold_time]
+
+D1 00 00    Cruise Control disabled
+D1 01 06    Cruise Control enabled, 6 sek hold time
+D1 01 08    Cruise Control enabled, 8 sek hold time
+
+
+════════════════════════════════════════════════════════════════
+10. BOOLEAN VALUES (Generelt)
+════════════════════════════════════════════════════════════════
+
+00    False / Disabled / Off
+01    True / Enabled / On
+
+
+════════════════════════════════════════════════════════════════
+11. TEMPERATURE THRESHOLDS
+════════════════════════════════════════════════════════════════
+
+Temperatur læses fra service 00006688 som decimal Celsius:
+
+Motor temperatur:
+00-3C     0-60°C   Normal drift (grøn)
+3D-46     61-70°C  Advarsel (gul) - reducer hastighed
+47+       71°C+    FAREZONE (rød) - NØDBREMSE!
+
+Batteri temperatur:
+00-28     0-40°C   Normal drift (grøn)
+29-32     41-50°C  Advarsel (gul) - reducer belastning
+33+       51°C+    FAREZONE (rød) - STOP!
+
+
+════════════════════════════════════════════════════════════════
+12. KOMPLETTE COMMAND EKSEMPLER
+════════════════════════════════════════════════════════════════
+
+Racer Mode (Fuld power):
+  A2 FF FF        No speed limit
+  A1 01 06        Zero start, max 6 km/h
+  A3 01           Sport+ enabled
+  A4 01           Turbo enabled
+  B1 00 00 00     Auto-lock disabled
+  C1 FE 00        Wheel 254mm (10")
+
+Eco Mode (Batterisparende):
+  A2 19 00        25 km/h limit
+  A1 00 00        Zero start disabled
+  A3 00           Sport+ disabled
+  A4 00           Turbo disabled
+  B1 01 00 3C     Auto-lock efter 60 sek
+
+Street Legal (Lovlig):
+  A2 19 00        25 km/h (DK/NL/DE standard)
+  A1 00 00        Zero start disabled
+  A3 00           Sport+ disabled
+  A4 00           Turbo disabled
+  B1 01 00 1E     Auto-lock efter 30 sek
+  C1 FE 00        Wheel 254mm (korrekt speedometer)
+
+
+════════════════════════════════════════════════════════════════
+13. DATA FORMAT REGLER
+════════════════════════════════════════════════════════════════
+
+Hastigheder:
+  - Gemmes som DECIMAL i app
+  - Konverteres til HEX ved BLE transmission
+  - Eksempel: 45 km/h → decimal 45 → 0x2D → send som byte
+
+Hjul størrelser:
+  - Gemmes som DECIMAL millimeter
+  - Konverteres til HEX Little-endian
+  - Eksempel: 254mm → 0x00FE → send som [0xFE, 0x00]
+
+Booleans:
+  - False = 0x00
+  - True = 0x01
+
+
+════════════════════════════════════════════════════════════════
+14. ADVARSEL OG SIKKERHED ⚠️
+════════════════════════════════════════════════════════════════
+
+KRITISK SIKKERHED:
+✓ Temperaturovervågning SKAL være aktiv hele tiden
+✓ Auto-reducer hastighed ved >70°C motor
+✓ Stop kørsel ved >50°C batteri
+✓ Test i kontrolleret miljø først
+✓ Sport+ og Turbo genererer MEGET varme
+✓ Forkerte commands kan "bricke" controlleren
+
+JURIDISK:
+⚠ Hastigheder over 25 km/h kan være ulovlige i dit land
+⚠ Brug på offentlig vej på eget ansvar
+⚠ Tjek lokal lovgivning
+
+HARDWARE:
+⚠ Overbelastning kan ødelægge motor permanent
+⚠ Overophedning kan smelte stik og kabler
+⚠ Turbo mode reducerer komponenternes levetid
+
+
+════════════════════════════════════════════════════════════════
+15. HEX CONVERSION REFERENCE
+════════════════════════════════════════════════════════════════
+
+Decimal → Hex hurtig reference (0-100):
+
+Dec  Hex  |  Dec  Hex  |  Dec  Hex  |  Dec  Hex
+  0  0x00 |   25  0x19 |   50  0x32 |   75  0x4B
+  1  0x01 |   26  0x1A |   51  0x33 |   76  0x4C
+  2  0x02 |   27  0x1B |   52  0x34 |   77  0x4D
+  3  0x03 |   28  0x1C |   53  0x35 |   78  0x4E
+  4  0x04 |   29  0x1D |   54  0x36 |   79  0x4F
+  5  0x05 |   30  0x1E |   55  0x37 |   80  0x50
+  6  0x06 |   31  0x1F |   56  0x38 |   85  0x55
+  7  0x07 |   32  0x20 |   57  0x39 |   90  0x5A
+  8  0x08 |   33  0x21 |   58  0x3A |   95  0x5F
+  9  0x09 |   34  0x22 |   59  0x3B |  100  0x64
+ 10  0x0A |   35  0x23 |   60  0x3C |  120  0x78
+ 15  0x0F |   39  0x27 |   65  0x41 |  200  0xC8
+ 20  0x14 |   45  0x2D |   70  0x46 |  255  0xFF
+
+Hjul størrelser (mm → Hex Little-endian):
+203mm → 0xCB → [CB 00]
+227mm → 0xE3 → [E3 00]
+254mm → 0xFE → [FE 00]
+281mm → 0x119 → [19 01]
+307mm → 0x133 → [33 01]
+
+
+════════════════════════════════════════════════════════════════
+EOF
+════════════════════════════════════════════════════════════════
