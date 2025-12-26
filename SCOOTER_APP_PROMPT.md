@@ -54,11 +54,19 @@ byteArrayOf(0xC1, 0xFE, 0x00)
 
 // No limit
 byteArrayOf(0xA2, 0xFF, 0xFF)
+
+// Sport+ mode (enable)
+byteArrayOf(0xA3, 0x01)
+
+// Electronic Turbo (enable)
+byteArrayOf(0xA4, 0x01)
 ```
 
 **Command Types:**
 - `0xA1` = Zero Start
 - `0xA2` = Speed Limit
+- `0xA3` = Sport+ Mode
+- `0xA4` = Electronic Turbo
 - `0xB1` = Lock Settings
 - `0xC1` = Wheel Config
 - `0xD1` = Cruise Control
@@ -76,6 +84,8 @@ byteArrayOf(0xA2, 0xFF, 0xFF)
 
 ### Tuning (Custom)
 - ✅ **No Limit Mode** - Fjern hastighedsgrænse
+- ✅ **Sport+ Mode** - Højere acceleration 🔥
+- ✅ **Electronic Turbo** - Max power boost 🚀
 - ✅ **Zero Start** - Start uden skub
 - ✅ **Disable Theft Lock** - Deaktiver auto-lock
 - ✅ **Wheel Size Config** - Juster speedometer
@@ -96,6 +106,16 @@ class ScooterBleManager(context: Context) : BleManager(context) {
     suspend fun enableZeroStart(maxSpeed: Int = 6) {
         val data = byteArrayOf(0xA1.toByte(), 0x01, maxSpeed.toByte())
         writeCharacteristic(SERVICE_6683, SPEED_CHAR, data)
+    }
+
+    suspend fun enableSportPlus(enabled: Boolean) {
+        val data = byteArrayOf(0xA3.toByte(), if (enabled) 0x01 else 0x00)
+        writeCharacteristic(SERVICE_6683, SPORT_CHAR, data)
+    }
+
+    suspend fun enableElectronicTurbo(enabled: Boolean) {
+        val data = byteArrayOf(0xA4.toByte(), if (enabled) 0x01 else 0x00)
+        writeCharacteristic(SERVICE_6683, TURBO_CHAR, data)
     }
 
     suspend fun disableAutoLock() {
@@ -136,6 +156,8 @@ data class ScooterSettings(
     val speedLimitKmh: Int = 39,
     val wheelDiameterMm: Int = 254,
     val zeroStartEnabled: Boolean = false,
+    val sportPlusEnabled: Boolean = false,  // 🔥
+    val turboEnabled: Boolean = false,      // 🚀
     val autoLockEnabled: Boolean = true
 )
 
@@ -182,6 +204,8 @@ data class ScooterTelemetry(
 - [ ] **⚠️ Temperaturovervågning aktiveret og virker**
 - [ ] Speed limit ændring (test med 45 km/h)
 - [ ] Zero start aktivering
+- [ ] Sport+ mode (højere acceleration)
+- [ ] Electronic Turbo (max power boost)
 - [ ] Wheel size kalibrering
 - [ ] Auto-lock deaktivering
 - [ ] **⚠️ Nødbremse ved overophedning (test ved 70°C)**
@@ -197,6 +221,7 @@ data class ScooterTelemetry(
 - **⚠️ TEMPERATUROVERVÅGNING ER OBLIGATORISK!**
   - Motor: Max 70°C (reducer hastighed automatisk)
   - Batteri: Max 50°C (stop kørsel)
+  - **Sport+ og Turbo genererer meget varme!**
   - Overophedning kan ødelægge komponenter permanent
 - Test i kontrolleret miljø først
 - Forkerte commands kan "brick" controlleren
