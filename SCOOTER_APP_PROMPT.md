@@ -71,6 +71,7 @@ byteArrayOf(0xA2, 0xFF, 0xFF)
 - BLE scanning & connection
 - Lock/Unlock
 - Battery & speed display
+- **⚠️ TEMPERATUROVERVÅGNING** (KRITISK!)
 - Device info
 
 ### Tuning (Custom)
@@ -110,6 +111,25 @@ class ScooterBleManager(context: Context) : BleManager(context) {
         )
         writeCharacteristic(SERVICE_6683, WHEEL_CHAR, data)
     }
+
+    // ⚠️ KRITISK: Temperaturovervågning
+    suspend fun readTemperature(): Int {
+        val data = readCharacteristic(SERVICE_6688, TEMP_CHAR)
+        return data[0].toInt()  // Temperatur i Celsius
+    }
+
+    fun monitorTemperature(callback: (Int) -> Unit) {
+        // Overvåg motor/batteri temperatur hver 5 sekund
+        // Stop ved overophedning (>70°C motor, >50°C batteri)
+        setNotificationCallback(SERVICE_6688).with { _, data ->
+            val temp = data.value?.get(0)?.toInt() ?: 0
+            if (temp > 70) {
+                // NØDBREMSE - reducer hastighed automatisk
+                setSpeedLimit(15)
+            }
+            callback(temp)
+        }
+    }
 }
 
 data class ScooterSettings(
@@ -117,6 +137,14 @@ data class ScooterSettings(
     val wheelDiameterMm: Int = 254,
     val zeroStartEnabled: Boolean = false,
     val autoLockEnabled: Boolean = true
+)
+
+data class ScooterTelemetry(
+    val batteryPercent: Int,
+    val speedKmh: Float,
+    val motorTempCelsius: Int,  // ⚠️ KRITISK
+    val batteryTempCelsius: Int, // ⚠️ KRITISK
+    val distanceKm: Float
 )
 ```
 
@@ -151,10 +179,12 @@ data class ScooterSettings(
 
 - [ ] BLE scan & connect
 - [ ] Lock/unlock virker
+- [ ] **⚠️ Temperaturovervågning aktiveret og virker**
 - [ ] Speed limit ændring (test med 45 km/h)
 - [ ] Zero start aktivering
 - [ ] Wheel size kalibrering
 - [ ] Auto-lock deaktivering
+- [ ] **⚠️ Nødbremse ved overophedning (test ved 70°C)**
 - [ ] Reconnect efter disconnect
 
 ---
@@ -164,6 +194,10 @@ data class ScooterSettings(
 **Brug på eget ansvar!**
 - Kan være ulovligt i dit land
 - Kan beskadige motor/batteri
+- **⚠️ TEMPERATUROVERVÅGNING ER OBLIGATORISK!**
+  - Motor: Max 70°C (reducer hastighed automatisk)
+  - Batteri: Max 50°C (stop kørsel)
+  - Overophedning kan ødelægge komponenter permanent
 - Test i kontrolleret miljø først
 - Forkerte commands kan "brick" controlleren
 
