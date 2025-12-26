@@ -1,0 +1,63 @@
+{
+  "tables": [
+    {
+      "name": "users",
+      "columns": [
+        {"name": "id", "type": "uuid", "primary": true},
+        {"name": "email", "type": "string", "unique": true},
+        {"name": "password_hash", "type": "string"},
+        {"name": "role", "type": "string"},
+        {"name": "created_at", "type": "timestamp"}
+      ]
+    },
+    {
+      "name": "scooters",
+      "columns": [
+        {"name": "id", "type": "uuid", "primary": true},
+        {"name": "model", "type": "string"},
+        {"name": "battery_level", "type": "integer"},
+        {"name": "location", "type": "json"},
+        {"name": "status", "type": "string"},
+        {"name": "firmware_version", "type": "string"},
+        {"name": "created_at", "type": "timestamp"}
+      ]
+    },
+    {
+      "name": "firmware",
+      "columns": [
+        {"name": "id", "type": "uuid", "primary": true},
+        {"name": "version", "type": "string"},
+        {"name": "device_type", "type": "string"},
+        {"name": "file_url", "type": "string"},
+        {"name": "file_size", "type": "integer"},
+        {"name": "changelog", "type": "text"},
+        {"name": "release_date", "type": "date"},
+        {"name": "is_stable", "type": "boolean"}
+      ]
+    },
+    {
+      "name": "rides",
+      "columns": [
+        {"name": "id", "type": "uuid", "primary": true},
+        {"name": "user_id", "type": "uuid", "foreign_key": "users.id"},
+        {"name": "scooter_id", "type": "uuid", "foreign_key": "scooters.id"},
+        {"name": "start_time", "type": "timestamp"},
+        {"name": "end_time", "type": "timestamp"},
+        {"name": "distance", "type": "float"},
+        {"name": "cost", "type": "decimal"}
+      ]
+    },
+    {
+      "name": "payments",
+      "columns": [
+        {"name": "id", "type": "uuid", "primary": true},
+        {"name": "user_id", "type": "uuid", "foreign_key": "users.id"},
+        {"name": "ride_id", "type": "uuid", "foreign_key": "rides.id"},
+        {"name": "amount", "type": "decimal"},
+        {"name": "chargebee_invoice_id", "type": "string"},
+        {"name": "status", "type": "string"},
+        {"name": "created_at", "type": "timestamp"}
+      ]
+    }
+  ]
+}
