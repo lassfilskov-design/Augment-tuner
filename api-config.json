@@ -1,0 +1,223 @@
+{
+  "api_endpoints": {
+    "graphql_public": {
+      "url": "https://frbc72oc4h.execute-api.eu-west-1.amazonaws.com/prod/graphql-public",
+      "type": "GraphQL",
+      "description": "Production GraphQL API endpoint"
+    },
+    "staging": {
+      "url": "https://staging--augment-escoot.netlify.app",
+      "type": "GraphQL",
+      "description": "Staging environment API"
+    }
+  },
+  "services": {
+    "aws": {
+      "region": "eu-west-1",
+      "services_detected": [
+        "AWS Cognito (Authentication)",
+        "AWS API Gateway (GraphQL endpoint)",
+        "AWS S3 (File storage - firmware files)"
+      ],
+      "cognito": {
+        "service": "cognito-idp",
+        "notes": "User authentication and management"
+      },
+      "s3": {
+        "service": "aws_user_files_s3",
+        "notes": "Firmware file storage and distribution"
+      }
+    },
+    "firebase": {
+      "services_detected": [
+        "Firebase Analytics",
+        "Firebase Cloud Messaging"
+      ],
+      "config_strings": [
+        "google_app_id",
+        "google_api_key",
+        "firebase_database_url",
+        "gcm_defaultSenderId",
+        "google_storage_bucket",
+        "project_id",
+        "ga_trackingId"
+      ],
+      "notes": "Configuration stored in Android string resources, not directly extractable from bundle"
+    },
+    "chargebee": {
+      "service": "Chargebee Payment Processing",
+      "operations_detected": [
+        "ChargebeeInvoice",
+        "ChargebeeEstimateSubscription",
+        "ChargebeeEstimateRenewalSubscription",
+        "chargebeeHostedPage",
+        "chargebeeCollectNowHostedPageForUnpaidInvoices"
+      ],
+      "notes": "Subscription and payment management"
+    },
+    "sentry": {
+      "service": "Sentry Error Tracking",
+      "integration": "sentry-react-native",
+      "features_detected": [
+        "Error tracking",
+        "Performance monitoring",
+        "User feedback",
+        "Breadcrumbs",
+        "Replay sessions"
+      ]
+    },
+    "onesignal": {
+      "service": "OneSignal Push Notifications",
+      "notes": "Mobile push notification service"
+    },
+    "netlify": {
+      "hosting": "staging--augment-escoot.netlify.app",
+      "notes": "Staging environment hosting"
+    }
+  },
+  "database_schema": {
+    "tables": [
+      "users",
+      "devices",
+      "device_users",
+      "device_share_otp",
+      "firmware",
+      "chargebee_payment_sources",
+      "subscriptions",
+      "device_status"
+    ],
+    "schema_file": "augment-api-schema.json"
+  },
+  "graphql_operations": {
+    "queries": [
+      "MeDevices",
+      "CheckDeviceOwnership",
+      "DeviceSettingsOperationCode",
+      "FirmwareUpgrade",
+      "DeviceQuery",
+      "DeviceSubUsers",
+      "MePaymentSources",
+      "MeManagePayment"
+    ],
+    "mutations": [
+      "RenameDevice",
+      "ChangeDeviceSharingSettings",
+      "ConsumeShareDeviceOtp",
+      "AddDeviceStatus",
+      "ChangeDeviceIdentifiers",
+      "ShareDeviceOtp",
+      "ResetDeviceOwnership",
+      "RevokeAccessToOwnersDevice",
+      "ClaimDeviceOwnership",
+      "AssignPaymentSourceRole",
+      "DeletePaymentSource"
+    ],
+    "fragments_detected": [
+      "ChargebeeHostedPageFragment"
+    ]
+  },
+  "bluetooth": {
+    "service_uuids": [
+      "00006680-0000-1000-8000-00805f9b34fb",
+      "00006681-0000-1000-8000-00805f9b34fb",
+      "00006683-0000-1000-8000-00805f9b34fb",
+      "00006684-0000-1000-8000-00805f9b34fb",
+      "00006685-0000-1000-8000-00805f9b34fb",
+      "00006687-0000-1000-8000-00805f9b34fb",
+      "00006688-0000-1000-8000-00805f9b34fb",
+      "0000d101-0000-1000-8000-00805f9b34fb",
+      "0000fed7-0000-1000-8000-00805f9b34fb",
+      "0000fed8-0000-1000-8000-00805f9b34fb"
+    ],
+    "operations": [
+      "discoverAllServicesAndCharacteristicsForDevice",
+      "connectToDevice",
+      "readCharacteristic",
+      "writeCharacteristic"
+    ],
+    "notes": "BLE (Bluetooth Low Energy) for scooter connectivity and control"
+  },
+  "features": {
+    "authentication": [
+      "Email/Password login",
+      "AWS Cognito integration",
+      "Password reset",
+      "MFA support (SMS, TOTP, Email OTP)"
+    ],
+    "device_management": [
+      "Device claiming/ownership",
+      "Device renaming",
+      "Device sharing via OTP codes",
+      "Device status tracking",
+      "Firmware updates (OTA)"
+    ],
+    "payments": [
+      "Chargebee integration",
+      "Subscription management",
+      "Invoice handling",
+      "Multiple payment methods (card, Google Pay, Apple Pay, PayPal, direct debit)"
+    ],
+    "firmware": [
+      "Version tracking",
+      "Device-specific firmware (scooter, controller, battery)",
+      "Stable/beta releases",
+      "Multilingual changelogs",
+      "File storage on S3"
+    ],
+    "monitoring": [
+      "Battery level tracking",
+      "Speed monitoring",
+      "GPS location tracking",
+      "Real-time device status"
+    ]
+  },
+  "configuration_notes": {
+    "api_keys_location": "API keys and secrets are likely stored in:",
+    "locations": [
+      "Environment variables on the server side",
+      "Encrypted native configuration (not extractable from APK)",
+      "Server-side secrets management (AWS Secrets Manager or similar)",
+      "google-services.json (Firebase - in native Android resources)",
+      "AndroidManifest.xml metadata"
+    ],
+    "security_note": "Production API keys and secrets are intentionally not exposed in the client bundle for security reasons"
+  },
+  "workik_setup_recommendations": {
+    "integrations": {
+      "amazon_s3": {
+        "purpose": "Firmware file storage",
+        "bucket_name": "<your-bucket-name>",
+        "region": "eu-west-1",
+        "access_key_id": "<your-aws-access-key>",
+        "secret_access_key": "<your-aws-secret-key>",
+        "notes": "Use for storing firmware update files"
+      },
+      "supabase": {
+        "purpose": "PostgreSQL database",
+        "project_url": "<your-supabase-url>",
+        "anon_key": "<your-supabase-anon-key>",
+        "service_role_key": "<your-supabase-service-role-key>",
+        "notes": "Import schema from augment-api-schema.json"
+      },
+      "stripe_or_chargebee": {
+        "purpose": "Payment processing",
+        "provider": "Chargebee",
+        "site": "<your-chargebee-site>",
+        "api_key": "<your-chargebee-api-key>",
+        "notes": "For subscription and invoice management"
+      }
+    },
+    "environment_variables": {
+      "DATABASE_URL": "postgresql://...",
+      "AWS_REGION": "eu-west-1",
+      "AWS_ACCESS_KEY_ID": "<your-key>",
+      "AWS_SECRET_ACCESS_KEY": "<your-secret>",
+      "S3_BUCKET_NAME": "<firmware-bucket>",
+      "CHARGEBEE_SITE": "<your-site>",
+      "CHARGEBEE_API_KEY": "<your-key>",
+      "SENTRY_DSN": "<your-sentry-dsn>",
+      "JWT_SECRET": "<your-jwt-secret>",
+      "GRAPHQL_ENDPOINT": "https://your-domain.com/graphql"
+    }
+  }
+}
