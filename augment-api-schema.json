@@ -1,0 +1,122 @@
+{
+  "api_url": "https://staging--augment-escoot.netlify.app",
+  "api_type": "GraphQL",
+  "tables": {
+    "users": {
+      "columns": [
+        {"name": "id", "type": "uuid", "primary": true},
+        {"name": "email", "type": "string", "unique": true},
+        {"name": "password_hash", "type": "string"},
+        {"name": "phone", "type": "string"},
+        {"name": "cognito_username", "type": "string"},
+        {"name": "created_at", "type": "timestamp"}
+      ]
+    },
+    "devices": {
+      "columns": [
+        {"name": "id", "type": "uuid", "primary": true},
+        {"name": "bt_mac", "type": "string", "description": "Bluetooth MAC address"},
+        {"name": "device_name", "type": "string"},
+        {"name": "firmware_version", "type": "string"},
+        {"name": "battery_percentage", "type": "integer"},
+        {"name": "battery_voltage", "type": "float"},
+        {"name": "cell_voltage", "type": "float"},
+        {"name": "speed", "type": "float"},
+        {"name": "owner_id", "type": "uuid", "foreign_key": "users.id"},
+        {"name": "sharing_enabled", "type": "boolean"},
+        {"name": "created_at", "type": "timestamp"}
+      ]
+    },
+    "device_users": {
+      "columns": [
+        {"name": "id", "type": "uuid", "primary": true},
+        {"name": "device_id", "type": "uuid", "foreign_key": "devices.id"},
+        {"name": "user_id", "type": "uuid", "foreign_key": "users.id"},
+        {"name": "device_user_type", "type": "string", "description": "OWNER or USER"},
+        {"name": "device_user_start_date", "type": "timestamp"},
+        {"name": "device_user_end_date", "type": "timestamp"}
+      ]
+    },
+    "device_share_otp": {
+      "columns": [
+        {"name": "id", "type": "uuid", "primary": true},
+        {"name": "device_id", "type": "uuid", "foreign_key": "devices.id"},
+        {"name": "otp_code", "type": "string"},
+        {"name": "expires_at", "type": "timestamp"},
+        {"name": "used", "type": "boolean"}
+      ]
+    },
+    "firmware": {
+      "columns": [
+        {"name": "id", "type": "uuid", "primary": true},
+        {"name": "version", "type": "string"},
+        {"name": "device_type", "type": "string", "description": "scooter, controller, battery"},
+        {"name": "file_url", "type": "string"},
+        {"name": "file_size", "type": "integer"},
+        {"name": "changelog", "type": "text"},
+        {"name": "language", "type": "string"},
+        {"name": "release_date", "type": "date"},
+        {"name": "is_stable", "type": "boolean"}
+      ]
+    },
+    "chargebee_payment_sources": {
+      "columns": [
+        {"name": "id", "type": "uuid", "primary": true},
+        {"name": "user_id", "type": "uuid", "foreign_key": "users.id"},
+        {"name": "payment_type", "type": "string", "description": "card, google_pay, apple_pay, paypal, direct_debit"},
+        {"name": "chargebee_customer_id", "type": "string"},
+        {"name": "chargebee_payment_source_id", "type": "string"},
+        {"name": "is_primary", "type": "boolean"},
+        {"name": "role", "type": "string"},
+        {"name": "created_at", "type": "timestamp"}
+      ]
+    },
+    "subscriptions": {
+      "columns": [
+        {"name": "id", "type": "uuid", "primary": true},
+        {"name": "user_id", "type": "uuid", "foreign_key": "users.id"},
+        {"name": "chargebee_subscription_id", "type": "string"},
+        {"name": "plan_id", "type": "string"},
+        {"name": "status", "type": "string"},
+        {"name": "addons", "type": "jsonb"},
+        {"name": "next_billing_at", "type": "timestamp"},
+        {"name": "created_at", "type": "timestamp"}
+      ]
+    },
+    "device_status": {
+      "columns": [
+        {"name": "id", "type": "uuid", "primary": true},
+        {"name": "device_id", "type": "uuid", "foreign_key": "devices.id"},
+        {"name": "battery_level", "type": "integer"},
+        {"name": "speed", "type": "float"},
+        {"name": "location", "type": "jsonb"},
+        {"name": "timestamp", "type": "timestamp"}
+      ]
+    }
+  },
+  "graphql_operations": {
+    "queries": [
+      "MeDevices",
+      "CheckDeviceOwnership",
+      "DeviceSettingsOperationCode",
+      "FirmwareUpgrade",
+      "DeviceQuery",
+      "DeviceSubUsers",
+      "MePaymentSources",
+      "MeManagePayment"
+    ],
+    "mutations": [
+      "RenameDevice",
+      "ChangeDeviceSharingSettings",
+      "ConsumeShareDeviceOtp",
+      "AddDeviceStatus",
+      "ChangeDeviceIdentifiers",
+      "ShareDeviceOtp",
+      "ResetDeviceOwnership",
+      "RevokeAccessToOwnersDevice",
+      "ClaimDeviceOwnership",
+      "AssignPaymentSourceRole",
+      "DeletePaymentSource"
+    ]
+  }
+}
