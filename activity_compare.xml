@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CONTROLLER COMPARISON"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Find ud af hvilken controller der har højere firmware limit"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:paddingBottom="24dp"/>
+
+        <!-- Status -->
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ready to test"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="16dp"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Test Button -->
+        <Button
+            android:id="@+id/btnTestBoth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="START COMPARISON TEST"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Results Container -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <!-- Controller #1 Column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:background="#FFF3E0">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="CONTROLLER #1"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:paddingBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvController1Info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Not tested yet"
+                    android:textSize="10sp"
+                    android:paddingBottom="16dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#CCCCCC"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvController1Results"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Speed tests:\n(pending)"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"/>
+
+            </LinearLayout>
+
+            <!-- Separator -->
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:background="#CCCCCC"/>
+
+            <!-- Controller #2 Column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:background="#E8F5E9">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="CONTROLLER #2"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:paddingBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvController2Info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Not tested yet"
+                    android:textSize="10sp"
+                    android:paddingBottom="16dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#CCCCCC"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvController2Results"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Speed tests:\n(pending)"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Instructions -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📋 Test Process"
+            android:textStyle="bold"
+            android:paddingTop="24dp"
+            android:paddingBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1. Reads firmware info from both controllers\n2. Tests speeds: 38, 40, 45, 50, 55 km/h\n3. Compares results\n4. Shows which controller has higher limit"
+            android:textSize="12sp"
+            android:paddingBottom="16dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⚠️ VIGTIGT"
+            android:textStyle="bold"
+            android:paddingBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Kør scooteren i kontrolleret miljø\n• Overvåg motor temperatur\n• Test tager ~5 minutter\n• Scooteren skal være tændt for test"
+            android:textSize="12sp"
+            android:paddingBottom="24dp"/>
+
+        <!-- Expected Results -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🎯 Forventede Resultater"
+            android:textStyle="bold"
+            android:paddingBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scenario A: Controller #2 højere\n  → Dump firmware fra #2\n  → Flash til #1\n  → Begge unlocked!\n\nScenario B: Begge samme\n  → Firmware modding nødvendig\n  → Se FIRMWARE_MODDING_GUIDE.md"
+            android:textSize="12sp"
+            android:fontFamily="monospace"
+            android:background="#F5F5F5"
+            android:padding="8dp"/>
+
+    </LinearLayout>
+
+</ScrollView>
