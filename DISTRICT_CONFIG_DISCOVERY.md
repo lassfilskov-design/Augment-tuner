@@ -38,8 +38,11 @@ DC = District 5
 CA = District 6
 FF = End marker / Default
 
-🔓 UNLOCK CODE: FE50
-   → Dette unlockede alle features på gamle model!
+🔓 UNLOCK CODE: BE50
+   → Speed unlocked (ingen hastighedsgrænse)
+   → E-brake disabled (ingen elektronisk bremse limit)
+   → Full flow (fuld power uden restriktioner)
+   → Zero-start enabled (kickfri start)
 ```
 
 ### Nuværende Augment Model:
@@ -58,8 +61,8 @@ ed = District code
 ef = District code / End marker
 
 🔓 UNLOCK CODE: ????? (SKAL FINDES!)
-   → Equivalent til FE50 fra gamle model
-   → Mulige kandidater: FEFF? FEFA? FFFF? FE50 stadig?
+   → Equivalent til BE50 fra gamle model
+   → Mulige kandidater: BE50? FE50? FF50? FEFF?
 ```
 
 ---
