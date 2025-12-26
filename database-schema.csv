@@ -1,0 +1,35 @@
+table_name,column_name,data_type,constraints,description
+users,id,uuid,PRIMARY KEY,Unique user identifier
+users,email,varchar(255),UNIQUE NOT NULL,User email address
+users,password_hash,varchar(255),NOT NULL,Hashed password
+users,role,varchar(50),NOT NULL,User role (admin/user)
+users,created_at,timestamp,DEFAULT NOW(),Account creation timestamp
+scooters,id,uuid,PRIMARY KEY,Unique scooter identifier
+scooters,model,varchar(100),NOT NULL,Scooter model name
+scooters,battery_level,integer,NOT NULL,Battery percentage (0-100)
+scooters,location,jsonb,NOT NULL,GPS coordinates (lat/lng)
+scooters,status,varchar(50),NOT NULL,Status (available/in_use/maintenance)
+scooters,firmware_version,varchar(50),,Current firmware version
+scooters,created_at,timestamp,DEFAULT NOW(),Scooter registration date
+firmware,id,uuid,PRIMARY KEY,Unique firmware identifier
+firmware,version,varchar(50),NOT NULL,Firmware version number
+firmware,device_type,varchar(50),NOT NULL,Device type (scooter/controller/battery)
+firmware,file_url,text,NOT NULL,Storage URL for firmware file
+firmware,file_size,integer,NOT NULL,File size in bytes
+firmware,changelog,text,,Release notes and changes
+firmware,release_date,date,NOT NULL,Release date
+firmware,is_stable,boolean,DEFAULT false,Stable or beta release
+rides,id,uuid,PRIMARY KEY,Unique ride identifier
+rides,user_id,uuid,FOREIGN KEY REFERENCES users(id),User who took the ride
+rides,scooter_id,uuid,FOREIGN KEY REFERENCES scooters(id),Scooter used for ride
+rides,start_time,timestamp,NOT NULL,Ride start time
+rides,end_time,timestamp,,Ride end time (null if ongoing)
+rides,distance,decimal(10,2),,Distance in kilometers
+rides,cost,decimal(10,2),,Total ride cost
+payments,id,uuid,PRIMARY KEY,Unique payment identifier
+payments,user_id,uuid,FOREIGN KEY REFERENCES users(id),User making payment
+payments,ride_id,uuid,FOREIGN KEY REFERENCES rides(id),Associated ride
+payments,amount,decimal(10,2),NOT NULL,Payment amount
+payments,chargebee_invoice_id,varchar(255),,Chargebee invoice reference
+payments,status,varchar(50),NOT NULL,Payment status (pending/completed/failed)
+payments,created_at,timestamp,DEFAULT NOW(),Payment creation timestamp
