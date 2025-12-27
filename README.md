@@ -5,12 +5,41 @@ Komplet backend system til Augment e-scooters med reverse-engineered UUID strukt
 ## 🎯 Projekt Oversigt
 
 Dette projekt indeholder:
+- **🤖 Android App** - Telemetri-fri app til Augment scootere (INGEN internet!)
 - **UUID Parser** - Dekodning af scooter UUID'er til region, distrikt og batch info
 - **API Dokumentation** - Komplet GraphQL schema fra Augment backend
 - **Integration Guides** - Dansk dokumentation til backend implementation
 - **Windows Scripts** - Batch scripts til hurtig setup og test
 
 ## 📁 Filer og Dokumentation
+
+### 🤖 Android App - Privacy First!
+
+**🔐 NO INTERNET PERMISSION = NO TELEMETRY**
+
+| Fil/Mappe | Beskrivelse |
+|-----------|-------------|
+| `app/` | Komplet Android app projekt (Kotlin + AndroidX) |
+| `APP_README.md` | Build instruktioner og dokumentation |
+| `MainActivity.kt` | BLE scanning, forbindelse og telemetri |
+| `AndroidManifest.xml` | **INGEN internet tilladelse!** |
+
+**Features:**
+- 📡 Scanner for Augment scootere (Service UUID: 0000ff01)
+- 🔗 Direkte Bluetooth forbindelse
+- 📊 Vis telemetri (batteri, hastighed, spænding)
+- 🔐 100% privacy - ingen data sendes til servere
+
+**Quick Start:**
+```bash
+# Åbn projekt i Android Studio
+# Build → Build APK(s)
+adb install app/build/outputs/apk/debug/app-debug.apk
+```
+
+Se `APP_README.md` for komplet dokumentation.
+
+---
 
 ### 🔍 UUID Parser (HOVEDOPDAGELSE!)
 
