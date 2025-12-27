@@ -135,6 +135,7 @@ Java.perform(function() {
 
 ### ✅ Vi Ved:
 - **11 Service UUIDs** (inkl. nyfundet 00006682)
+- **8+ Karakteristik UUIDs** via 668X→688X mønster (særligt 00006883 til lock/unlock!)
 - **BLE Library:** react-native-ble-plx (bruger base64-encoded data)
 - **GraphQL Backend:** lockHX/unlockHX er hex-encoded kommandoer fra serveren
 - **Kommando navne:** lock, unlock, setSpeed (via settingsOperationCode)
@@ -143,7 +144,6 @@ Java.perform(function() {
 - **JavaScript Bundle:** 7.5MB minified React Native code analyseret
 
 ### ❌ Vi Mangler:
-- **Karakteristik UUIDs** under hver service (særligt CONTROL service 00006683)
 - **Præcise byte arrays** - lockHX/unlockHX skal hentes fra Augment backend per scooter
 - **Response format** fra scooter til app
 - **Checksum/CRC** beregning (hvis nogen)
