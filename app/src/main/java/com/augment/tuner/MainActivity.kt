@@ -14,16 +14,17 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.ParcelUuid
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.material.button.MaterialButton
 import java.util.UUID
 
 class MainActivity : AppCompatActivity() {
@@ -33,16 +34,21 @@ class MainActivity : AppCompatActivity() {
 
     private val PERMISSION_REQUEST_CODE = 1001
 
-    // UI elements
-    private lateinit var btnConnect: Button
-    private lateinit var btnApply: Button
-    private lateinit var tvStatus: TextView
-    private lateinit var tvMacAddress: TextView
-    private lateinit var tvServiceUuid: TextView
-    private lateinit var tvManufacturerData: TextView
-    private lateinit var tvBattery: TextView
-    private lateinit var tvSpeed: TextView
-    private lateinit var tvVoltage: TextView
+    // UI elements - Connection
+    private lateinit var tvConnectionStatus: TextView
+    private lateinit var btnConnect: MaterialButton
+    private lateinit var tvScooterInfo: TextView
+
+    // UI elements - Quick Stats
+    private lateinit var tvQuickBattery: TextView
+    private lateinit var tvQuickSpeed: TextView
+    private lateinit var tvQuickDistance: TextView
+
+    // UI elements - Navigation
+    private lateinit var btnDiagnostics: MaterialButton
+    private lateinit var btnRideHistory: MaterialButton
+    private lateinit var btnAdvancedTuning: MaterialButton
+    private lateinit var btnSettings: MaterialButton
 
     // Bluetooth
     private var bluetoothAdapter: BluetoothAdapter? = null
@@ -53,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main_enhanced)
 
         initializeViews()
         setupBluetooth()
@@ -62,15 +68,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeViews() {
+        // Connection
+        tvConnectionStatus = findViewById(R.id.tvConnectionStatus)
         btnConnect = findViewById(R.id.btnConnect)
-        btnApply = findViewById(R.id.btnApply)
-        tvStatus = findViewById(R.id.tvStatus)
-        tvMacAddress = findViewById(R.id.tvMacAddress)
-        tvServiceUuid = findViewById(R.id.tvServiceUuid)
-        tvManufacturerData = findViewById(R.id.tvManufacturerData)
-        tvBattery = findViewById(R.id.tvBattery)
-        tvSpeed = findViewById(R.id.tvSpeed)
-        tvVoltage = findViewById(R.id.tvVoltage)
+        tvScooterInfo = findViewById(R.id.tvScooterInfo)
+
+        // Quick Stats
+        tvQuickBattery = findViewById(R.id.tvQuickBattery)
+        tvQuickSpeed = findViewById(R.id.tvQuickSpeed)
+        tvQuickDistance = findViewById(R.id.tvQuickDistance)
+
+        // Navigation
+        btnDiagnostics = findViewById(R.id.btnDiagnostics)
+        btnRideHistory = findViewById(R.id.btnRideHistory)
+        btnAdvancedTuning = findViewById(R.id.btnAdvancedTuning)
+        btnSettings = findViewById(R.id.btnSettings)
     }
 
     private fun setupBluetooth() {
@@ -109,6 +121,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        // Connection
         btnConnect.setOnClickListener {
             if (isScanning) {
                 stopScan()
@@ -117,8 +130,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        btnApply.setOnClickListener {
-            applySettings()
+        // Navigation
+        btnDiagnostics.setOnClickListener {
+            startActivity(Intent(this, DiagnosticsActivity::class.java).apply {
+                putExtra("DEVICE_ADDRESS", connectedDevice?.address)
+            })
+        }
+
+        btnRideHistory.setOnClickListener {
+            startActivity(Intent(this, RideHistoryActivity::class.java))
+        }
+
+        btnAdvancedTuning.setOnClickListener {
+            startActivity(Intent(this, AdvancedTuningActivity::class.java))
+        }
+
+        btnSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
     }
 
@@ -141,7 +169,7 @@ class MainActivity : AppCompatActivity() {
         bluetoothLeScanner?.startScan(listOf(scanFilter), scanSettings, scanCallback)
         isScanning = true
         btnConnect.text = "STOP SCANNING"
-        updateStatus("Scanning for Augment scooters...", "#FF9800")
+        updateConnectionStatus("🔍 Scanning...", "#FF9800")
     }
 
     @SuppressLint("MissingPermission")
@@ -150,7 +178,7 @@ class MainActivity : AppCompatActivity() {
         isScanning = false
         btnConnect.text = "SCAN FOR SCOOTER"
         if (connectedDevice == null) {
-            updateStatus("Disconnected", "#FF0000")
+            updateConnectionStatus("⚫ Disconnected", "#FF0000")
         }
     }
 
@@ -161,20 +189,13 @@ class MainActivity : AppCompatActivity() {
             val scanRecord = result.scanRecord
 
             runOnUiThread {
-                tvMacAddress.text = "MAC: ${device.address}"
+                tvScooterInfo.text = "MAC: ${device.address}"
 
                 // Parse manufacturer data
-                val manufacturerData = scanRecord?.getManufacturerSpecificData(0x5240) // Company ID from screenshot
-                if (manufacturerData != null) {
-                    val hexData = manufacturerData.joinToString("") { "%02X".format(it) }
-                    tvManufacturerData.text = "Mfr Data: 0x$hexData"
-
-                    // Parse telemetry from manufacturer data (theoretical)
-                    if (manufacturerData.size >= 4) {
-                        // This is speculative - actual format unknown
-                        val battery = (manufacturerData[2].toInt() and 0xFF)
-                        tvBattery.text = "Battery: $battery%"
-                    }
+                val manufacturerData = scanRecord?.getManufacturerSpecificData(0x5240)
+                if (manufacturerData != null && manufacturerData.size >= 4) {
+                    val battery = (manufacturerData[2].toInt() and 0xFF)
+                    tvQuickBattery.text = "$battery%"
                 }
 
                 // Connect to device
@@ -193,7 +214,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private fun connectToDevice(device: BluetoothDevice) {
-        updateStatus("Connecting to ${device.address}...", "#FF9800")
+        updateConnectionStatus("🔄 Connecting...", "#FF9800")
         bluetoothGatt = device.connectGatt(this, false, gattCallback)
     }
 
@@ -204,18 +225,18 @@ class MainActivity : AppCompatActivity() {
                 BluetoothProfile.STATE_CONNECTED -> {
                     connectedDevice = gatt.device
                     runOnUiThread {
-                        updateStatus("Connected: ${gatt.device.address}", "#00AA00")
+                        updateConnectionStatus("🟢 Connected", "#00AA00")
                         btnConnect.text = "DISCONNECT"
-                        btnApply.isEnabled = true
+                        tvScooterInfo.text = "MAC: ${gatt.device.address}"
                     }
                     gatt.discoverServices()
                 }
                 BluetoothProfile.STATE_DISCONNECTED -> {
                     connectedDevice = null
                     runOnUiThread {
-                        updateStatus("Disconnected", "#FF0000")
+                        updateConnectionStatus("⚫ Disconnected", "#FF0000")
                         btnConnect.text = "SCAN FOR SCOOTER"
-                        btnApply.isEnabled = false
+                        tvScooterInfo.text = "MAC: Not connected"
                     }
                 }
             }
@@ -236,19 +257,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun applySettings() {
-        if (connectedDevice == null) {
-            Toast.makeText(this, "Ingen scooter forbundet", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // TODO: Implement actual scooter configuration
-        Toast.makeText(this, "Settings applied (local only)", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun updateStatus(message: String, color: String) {
-        tvStatus.text = "Status: $message"
-        tvStatus.setTextColor(android.graphics.Color.parseColor(color))
+    private fun updateConnectionStatus(message: String, color: String) {
+        tvConnectionStatus.text = message
+        tvConnectionStatus.setTextColor(android.graphics.Color.parseColor(color))
     }
 
     private fun hasRequiredPermissions(): Boolean {

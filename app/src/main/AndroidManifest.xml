@@ -28,5 +28,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".DiagnosticsActivity"
+            android:exported="false"
+            android:label="Diagnostics"/>
+
+        <activity
+            android:name=".RideHistoryActivity"
+            android:exported="false"
+            android:label="Ride History"/>
+
+        <activity
+            android:name=".AdvancedTuningActivity"
+            android:exported="false"
+            android:label="Advanced Tuning"/>
+
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:label="Settings"/>
+
     </application>
 </manifest>
