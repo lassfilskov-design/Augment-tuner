@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="AUGMENT TUNER"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:paddingBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Telemetry-Free Scooter Control"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:textColor="#666666"
+            android:paddingBottom="24dp"/>
+
+        <!-- Status -->
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status: Disconnected"
+            android:textSize="16sp"
+            android:textColor="#FF0000"
+            android:padding="12dp"
+            android:background="#F0F0F0"
+            android:gravity="center"/>
+
+        <!-- Scan/Connect Button -->
+        <Button
+            android:id="@+id/btnConnect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SCAN FOR SCOOTER"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:padding="16dp"/>
+
+        <!-- Scooter Info Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scooter Information"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:paddingBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvMacAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MAC: Not connected"
+            android:textSize="14sp"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/tvServiceUuid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Service UUID: 0000ff01-..."
+            android:textSize="14sp"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/tvManufacturerData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mfr Data: N/A"
+            android:textSize="14sp"
+            android:padding="8dp"/>
+
+        <!-- Telemetry Data -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Live Telemetry (Local Only)"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:paddingBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvBattery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Battery: ---%"
+            android:textSize="16sp"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/tvSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Speed: -- km/h"
+            android:textSize="16sp"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/tvVoltage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Voltage: -- V"
+            android:textSize="16sp"
+            android:padding="8dp"/>
+
+        <!-- Apply Settings Button -->
+        <Button
+            android:id="@+id/btnApply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="APPLY SETTINGS"
+            android:textSize="18sp"
+            android:layout_marginTop="24dp"
+            android:padding="16dp"
+            android:enabled="false"/>
+
+        <!-- Privacy Notice -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🔒 NO INTERNET = NO TELEMETRY\nAll data stays on your device"
+            android:textSize="12sp"
+            android:textColor="#00AA00"
+            android:gravity="center"
+            android:layout_marginTop="24dp"
+            android:padding="12dp"
+            android:background="#E8F5E9"/>
+
+    </LinearLayout>
+</ScrollView>
