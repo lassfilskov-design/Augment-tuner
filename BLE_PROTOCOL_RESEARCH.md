@@ -22,6 +22,20 @@ FED7 og FED8 er standard Nordic Semiconductor DFU (Device Firmware Update) servi
 Disse bruges typisk IKKE til normale kommandoer, men kun til firmware opdateringer.
 Karakteristikker for disse er standard Nordic DFU karakteristikker (se Nordic DFU dokumentation).
 
+**🔥 VIGTIG STRATEGI: Reverse Engineering via Firmware**
+Appen har funktionalitet til firmware opdateringer (`/pages/FirmwareUpdate/`).
+Hvis du kan få fat i firmware binær filen (.bin/.hex), kan du reverse engineere den for at finde:
+- **Alle BLE kommandoer hardcoded** i scooter firmware
+- **Lock/unlock protokol** direkte fra scooterens kode
+- **Speed limit ranges** og validering
+- **Authentication metoder** og måske endda nøgler
+- **Response formats** og alle command handlers
+
+**Metoder til at få firmware:**
+1. **Sniff OTA opdatering** - Brug nRF Sniffer/Wireshark under firmware upload
+2. **GraphQL backend** - Firmware URL hentes sandsynligvis fra backend ligesom lockHX/unlockHX
+3. **App cache** - Firmware downloades først, tjek app's cache/storage during opdatering
+
 ### BLE Library
 App bruger: **react-native-ble-plx**
 - Alle BLE writes bruger base64-encoded data
