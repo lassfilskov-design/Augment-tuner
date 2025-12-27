@@ -25,10 +25,12 @@ Efter 2 dages APK reverse engineering opdaget vi UUID strukturen:
 | `EXAMPLES.md` | Praktiske eksempler (GraphQL, React, database) |
 
 **Nøgle Fund:**
-- Alle UUID'er har fast `ff01` identifier på position 2
-- Region koder: `38`=København, `40`=Aarhus, `50`=Odense
-- Batch numre i 4. segment tillader fleet management
-- Muliggør geografisk filtrering uden database lookup!
+- Bluetooth Service UUID: `0000ff01-0000-1000-8000-00805f9b34fb`
+- MAC adresse format: `A8:B6:XX:XX:XX:XX` (A8:B6 observeret i Danmark)
+- Manufacturer specific data i advertising packet
+
+⚠️ **MULIG TEORI - IKKE VERIFICERET:**
+Region koderne (38=København, 40=Aarhus, osv.) og UUID strukturen beskrevet nedenfor er teoretiske hypoteser baseret på begrænsede observationer. De faktiske mønstre kan være anderledes. UUID parseren fungerer som proof-of-concept eksempel, men region mappings er ikke bekræftede.
 
 ### 📚 Integration Guides
 
@@ -94,28 +96,38 @@ const updateQueue = fleet.getFirmwareUpdateQueue('v2.5.0', {
 });
 ```
 
-## 📊 UUID Struktur
+## 📊 UUID Struktur (TEORETISK MODEL)
+
+⚠️ **ADVARSEL**: Følgende struktur er en teoretisk model, ikke verificeret data.
 
 ```
 550e8400-ff01-3801-0042-a1b2c3d4e5f6
-│        │    │  │ │    └─ Device ID & metadata
-│        │    │  │ └────── Batch #66 (0x0042)
-│        │    │  └───────── Sub-region 01
-│        │    └──────────── Region 38 (København)
-│        └───────────────── ff01 (FAST identifier)
-└────────────────────────── Deployment ID
+│        │    │  │ │    └─ Device ID & metadata (HYPOTESE)
+│        │    │  │ └────── Batch #66 (HYPOTESE)
+│        │    │  └───────── Sub-region 01 (HYPOTESE)
+│        │    └──────────── Region 38 (HYPOTESE)
+│        └───────────────── ff01 (Bluetooth Service UUID)
+└────────────────────────── Deployment ID (HYPOTESE)
 ```
 
-### Region Koder
+### Faktiske Observationer
 
-| Kode | By | Distrikt |
-|------|---------|----------|
-| `38` | København | Central |
-| `39` | København | Nord |
-| `3a` | København | Syd/Vest |
-| `40` | Aarhus | Central |
-| `41` | Aarhus | Nord |
-| `50` | Odense | Central |
+**Bekræftet:**
+- MAC adresse: `A8:B6:66:52:52:40`
+- Service UUID: `0000ff01-0000-1000-8000-00805f9b34fb`
+- A8:B6 prefix observeret i danske scootere
+- Manufacturer data: `0x5266B6A8` (little endian muligvis)
+
+**Ikke bekræftet (Teoretiske region koder):**
+
+| Kode | By | Distrikt | Status |
+|------|---------|----------|--------|
+| `38` | København | Central | ⚠️ TEORI |
+| `39` | København | Nord | ⚠️ TEORI |
+| `3a` | København | Syd/Vest | ⚠️ TEORI |
+| `40` | Aarhus | Central | ⚠️ TEORI |
+| `41` | Aarhus | Nord | ⚠️ TEORI |
+| `50` | Odense | Central | ⚠️ TEORI |
 
 ## 🔧 Teknisk Stack
 
@@ -133,16 +145,18 @@ const updateQueue = fleet.getFirmwareUpdateQueue('v2.5.0', {
 - Se `INTEGRATION_GUIDE.md` for backend integration guide (dansk)
 - Se `augment-api-schema.json` for komplet API schema
 
-## 🎉 Nøgle Funktioner
+## 🎉 Nøgle Funktioner (Proof-of-Concept)
 
-✅ **UUID Parser** - Ekstrahér region, distrikt, batch fra scooter UUID
-✅ **Geografisk Filtrering** - Find scootere per by/region uden database
-✅ **Fleet Management** - Administrér scooter fleets på tværs af regioner
-✅ **Batch Tracking** - Gruppér scootere efter deployment batch
-✅ **Firmware Updates** - Prioriteret rollout strategi
-✅ **Fleet Analytics** - Batteri statistik, regional distribution
-✅ **GraphQL Integration** - Ready-to-use resolvers
-✅ **Database Optimization** - Computed columns for hurtig lookup
+⚠️ **Note**: Funktionerne nedenfor er proof-of-concept implementeringer baseret på teoretiske modeller.
+
+📋 **UUID Parser** - Eksempel implementation af UUID parsing
+📋 **Geografisk Filtrering** - Teoretisk model for region filtrering
+📋 **Fleet Management** - Framework til fleet management (kræver verificerede data)
+📋 **Batch Tracking** - Koncept for batch gruppering
+📋 **Firmware Updates** - Eksempel på prioriteret rollout strategi
+📋 **Fleet Analytics** - Statistik framework (kræver reelle region mappings)
+📋 **GraphQL Integration** - Eksempel resolvers
+📋 **Database Optimization** - Foreslåede optimeringer
 
 ## 🧪 Test Resultat
 
@@ -150,6 +164,35 @@ const updateQueue = fleet.getFirmwareUpdateQueue('v2.5.0', {
 Test Resultat: 15/15 tests bestået
 🎉 Alle tests bestået!
 ```
+
+⚠️ **Note**: Tests validerer kun at parseren fungerer med de teoretiske UUID formater. Tests bekræfter IKKE at region mappings er korrekte.
+
+---
+
+## 🔬 Hvad er Fakta vs. Teori?
+
+### ✅ Verificeret (Faktiske Observationer):
+- Bluetooth Service UUID: `0000ff01-0000-1000-8000-00805f9b34fb`
+- MAC adresse eksempel: `A8:B6:66:52:52:40`
+- A8:B6 prefix set i danske enheder
+- Manufacturer specific data: `0x5266B6A8`
+- GraphQL API schema fra APK
+- Database struktur (users, devices, firmware, etc.)
+
+### ⚠️ Teoretisk (Ikke Verificeret):
+- UUID region koder (38, 40, 50 osv.)
+- By/distrikt mappings (København, Aarhus, osv.)
+- Batch nummer position i UUID
+- Little endian konvertering hypotese
+- Deployment ID struktur
+
+### 📊 Mangler Data:
+- Flere MAC adresse eksempler fra forskellige lande
+- Verifikation af region kode mønstre
+- Batch nummer system dokumentation
+- Manufacturer data format specifikation
+
+---
 
 ## 📝 Licens
 
