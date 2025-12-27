@@ -51,19 +51,28 @@ query DeviceQuery($input: DeviceQueryInput!) {
 
 ## ⚠️ Teoretisk/Mangler Verifikation
 
-### Karakteristikker (IKKE FUNDET ENDNU)
-Under hver service skal der være karakteristikker for READ/WRITE/NOTIFY.
+### ✅ Karakteristikker (FUNDET!)
 
-**Standard BLE GATT mønster:**
+**UUID Mønster fra APK JavaScript Bundle:**
+Augment bruger et smart mønster hvor karakteristik UUIDs matcher service UUIDs men med 688X i stedet for 668X:
+
 ```
-Service: 00006683 (CONTROL)
-  ├─ Characteristic: 00006683-XXXX-... (WRITE) → Commands
-  └─ Characteristic: 00006683-YYYY-... (NOTIFY) → Responses
+Service UUID      →  Characteristic UUID
+00006680-...-34fb  →  00006880-...-34fb  (PRIMARY)
+00006681-...-34fb  →  00006881-...-34fb  (SECONDARY)
+00006682-...-34fb  →  00006882-...-34fb  (UNKNOWN)
+00006683-...-34fb  →  00006883-...-34fb  ← LOCK/UNLOCK SENDES HER!
+00006684-...-34fb  →  00006884-...-34fb  (STATUS)
+00006685-...-34fb  →  00006885-...-34fb  (FIRMWARE - ekstra char?)
+00006687-...-34fb  →  00006887-...-34fb  (BATTERY)
+00006688-...-34fb  →  00006888-...-34fb  (GPS)
 ```
 
-**Mulige karakteristik UUID formater:**
-- `00006683-0001-1000-8000-00805f9b34fb` (WRITE)
-- `00006683-0002-1000-8000-00805f9b34fb` (NOTIFY)
+**VIGTIGST for Lock/Unlock:**
+```
+Service:        00006683-0000-1000-8000-00805f9b34fb  (CONTROL)
+Characteristic: 00006883-0000-1000-8000-00805f9b34fb  ← Skriv lockHX/unlockHX her
+```
 
 ### Command Format (SPEKULATIVT)
 **Baseret på typiske e-scooter protokoller:**
