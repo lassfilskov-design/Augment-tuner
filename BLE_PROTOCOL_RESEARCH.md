@@ -13,9 +13,14 @@ FIRMWARE:    00006685-0000-1000-8000-00805f9b34fb
 BATTERY:     00006687-0000-1000-8000-00805f9b34fb
 GPS:         00006688-0000-1000-8000-00805f9b34fb
 DEVICE_INFO: 0000d101-0000-1000-8000-00805f9b34fb
-OTA_1:       0000fed7-0000-1000-8000-00805f9b34fb
-OTA_2:       0000fed8-0000-1000-8000-00805f9b34fb
+OTA_1:       0000fed7-0000-1000-8000-00805f9b34fb  ← Nordic DFU (Legacy)
+OTA_2:       0000fed8-0000-1000-8000-00805f9b34fb  ← Nordic DFU (Secure)
 ```
+
+**Note om OTA Services:**
+FED7 og FED8 er standard Nordic Semiconductor DFU (Device Firmware Update) services.
+Disse bruges typisk IKKE til normale kommandoer, men kun til firmware opdateringer.
+Karakteristikker for disse er standard Nordic DFU karakteristikker (se Nordic DFU dokumentation).
 
 ### BLE Library
 App bruger: **react-native-ble-plx**
