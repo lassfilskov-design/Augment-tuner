@@ -1,0 +1,114 @@
+╔══════════════════════════════════════════════════════════╗
+║  WINDOWS 11 CUSTOM INSTALLATION - QUICK START GUIDE     ║
+╚══════════════════════════════════════════════════════════╝
+
+SÅDAN INSTALLERER DU (2 metoder):
+
+═══════════════════════════════════════════════════════════
+  METODE 1: NEMMEST (Anbefalet)
+═══════════════════════════════════════════════════════════
+
+1. Højreklik på: START-INSTALLATION.bat
+2. Vælg: "Run as administrator"
+3. Følg instruktionerne på skærmen
+4. Genstart når færdig
+
+VIGTIGT: Du SKAL højreklikke og vælge "Run as administrator"!
+         Ellers virker det ikke!
+
+═══════════════════════════════════════════════════════════
+  METODE 2: MANUEL (Hvis metode 1 ikke virker)
+═══════════════════════════════════════════════════════════
+
+1. Tryk Windows-tasten
+2. Skriv: PowerShell
+3. Højreklik på "Windows PowerShell"
+4. Vælg: "Run as administrator"
+5. Skriv eller kopier denne kommando:
+
+   Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+6. Tryk Y og Enter
+7. Skriv eller kopier denne kommando (ret stien hvis nødvendigt):
+
+   cd C:\Users\[DIT BRUGERNAVN]\Downloads\Windows11-Custom\Scripts
+
+8. Skriv eller kopier denne kommando:
+
+   .\INSTALL-ALL.ps1
+
+9. Følg instruktionerne
+10. Genstart når færdig
+
+═══════════════════════════════════════════════════════════
+  HJÆLP - VINDUET LUKKER MED DET SAMME
+═══════════════════════════════════════════════════════════
+
+Problem: PowerShell vinduet lukker øjeblikkeligt
+
+Løsninger:
+□ Kør som Administrator (højreklik → Run as administrator)
+□ Brug START-INSTALLATION.bat filen i stedet
+□ Følg METODE 2 ovenfor
+
+═══════════════════════════════════════════════════════════
+  HJÆLP - "cannot be loaded because running scripts..."
+═══════════════════════════════════════════════════════════
+
+Dette betyder PowerShell blokerer scripts.
+
+Fix:
+1. Åbn PowerShell som Administrator
+2. Skriv: Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+3. Tryk Y og Enter
+4. Prøv igen
+
+═══════════════════════════════════════════════════════════
+  HVAD SKER DER UNDER INSTALLATION?
+═══════════════════════════════════════════════════════════
+
+✓ System Restore Point oprettes (så du kan rulle tilbage)
+✓ Bloatware apps fjernes (Xbox, Bing, Solitaire, etc.)
+✓ Performance indstillinger optimeres
+✓ Unødvendige services deaktiveres
+✓ System tweaks anvendes
+
+Tid: 5-15 minutter
+
+VIGTIGT: Sikkerhedsfeatures (Defender, Firewall, Updates)
+         påvirkes IKKE - de bevares fuldt ud!
+
+═══════════════════════════════════════════════════════════
+  EFTER INSTALLATION
+═══════════════════════════════════════════════════════════
+
+1. GENSTART din computer (vigtigt!)
+2. Check at alt virker
+3. Nyd dit hurtigere Windows 11!
+
+═══════════════════════════════════════════════════════════
+  HVIS DU FORTRYDER
+═══════════════════════════════════════════════════════════
+
+Metode 1: System Restore
+1. Søg "Create a restore point" i Start Menu
+2. Klik "System Restore"
+3. Vælg restore point fra før installation
+4. Følg wizard
+
+Metode 2: Restore Script
+1. Kør Scripts\RESTORE-DEFAULTS.ps1
+2. Genstart
+
+═══════════════════════════════════════════════════════════
+  MER HJÆLP?
+═══════════════════════════════════════════════════════════
+
+Læs:
+- README.md - Komplet oversigt
+- Docs\INSTALLATION-GUIDE.md - Detaljeret guide
+- Docs\FAQ.md - Almindelige spørgsmål
+
+═══════════════════════════════════════════════════════════
+
+Held og lykke! 🚀
